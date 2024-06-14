@@ -1,0 +1,21 @@
+/* css to the button  */
+
+    .stButton button {
+        border: none;
+        background-color: transparent;
+        color:white;
+        font-size: 19px;
+        cursor: pointer;
+    }
+    .stButton button:hover {
+        color: darkblue;
+        background-color:white;
+    }
+    /* .response-box {
+        margin-top: 10px;
+        padding: 10px;
+        overflow-wrap:break-word ;
+    } */
+    .sidebar{
+        width: 300px;
+    }
