@@ -26,3 +26,6 @@ def handle_enter_pressed(client, user_input, model):
             """,
             unsafe_allow_html=True
         )
+def inject_css(css_file):
+    with open(css_file) as f:
+        st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)

@@ -4,13 +4,17 @@ from groq import Groq
 from dotenv import load_dotenv
 from utils import inject_css, handle_enter_pressed
 
+
+st.set_page_config(page_title="MedPhi-v1",page_icon="☣")
+
 load_dotenv()
 groq_api_key = os.getenv("groq_api_key")
 
 st.sidebar.title("Personalization")
-prompt = st.sidebar.title("System Prompt:")
+st.sidebar.title("System Prompt:")
+
 model = st.sidebar.selectbox(
-    'Choose a model', ['Llama3-8b-8192', 'Llama3-70b-8192', 'Mixtral-8x7b-32768', 'Gemma-7b-It']
+    'Choose a model', ['Llama3-8b-8192', 'Llama3-70b-8192', 'Mixtral-8x7b-32768', 'Gemma-7b-It', 'BioMistral-7B']
 )
 
 # Inject CSS from external file
@@ -20,20 +24,18 @@ inject_css('styles.css')
 client = Groq(api_key=groq_api_key)
 
 # Interface
-st.title("Medical ChatBot")
+st.markdown('<div class="fixed-title"><h1>Medical ChatBot</h1></div>', unsafe_allow_html=True)
 
 # Session state for history
 if "history" not in st.session_state:
     st.session_state.history = []
 
-user_input = st.text_input("Enter your query:", "")
-# truncated_input = user_input[:20]
-# Call handle_enter_pressed function to handle Enter key press
-handle_enter_pressed(client, user_input, model)
+if "user_input" not in st.session_state:
+    st.session_state.user_input = ""
 
-col1, col2 = st.columns([3, 1])
-with col1:
-    if st.button("Submit", key='submit_button'):
+def handle_submit():
+    user_input = st.session_state.user_input
+    if user_input:
         chat_completion = client.chat.completions.create(
             messages=[
                 {
@@ -43,17 +45,47 @@ with col1:
             ],
             model=model,
         )
-        # Store the query and response
         response = chat_completion.choices[0].message.content
-        st.session_state.history.append({"query": user_input[:20]+"...", "response": response})
-        st.markdown(f'<div class="response-box">{response}</div>', unsafe_allow_html=True)
+        st.session_state.history.append({"query": user_input[:20], "response": response})
+        st.markdown(f'<div class="query-box">Query:<br> {user_input}<hr></div>', unsafe_allow_html=True)
+        st.markdown(f'<div class="response-box">Response:<br>{response}</div>', unsafe_allow_html=True)
+        st.session_state.user_input = ""
 
-with col2:
-    if st.button("Clear History"):
-        st.session_state.history = []
+
+
+# JavaScript to handle Enter key press
+enter_script = """
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const input = document.querySelector('.stTextInput input');
+    input.addEventListener('keydown', function(event) {
+        if (event.key === 'Enter') {
+            event.preventDefault(); // Prevents the default action (e.g., form submission)
+            const submitButton = document.querySelector('.stButton button');
+            submitButton.click(); // Simulate click on the submit button
+        }
+    });
+});
+</script>
+"""
+st.markdown(enter_script, unsafe_allow_html=True)
+
+
+# Function to clear chat history
+def clear_history():
+    st.session_state.history = []
+
+# User input with on_change callback
+user_input = st.text_input("Enter your query:", placeholder="Message ",key="user_input", on_change=handle_submit)
+
+
 
 # History Display
 st.sidebar.title("History")
+if st.sidebar.button("Clear History"):
+    st.session_state.history = [] 
 for i, entry in enumerate(st.session_state.history):
-    if st.sidebar.button(f'{i + 1}.{entry["query"]}'):
+    if st.sidebar.button(f'{i+1}.{entry["query"]}...', key=f'history_{i}'):
         st.markdown(f'<div class="response-box">{entry["response"]}</div>', unsafe_allow_html=True)
+
+

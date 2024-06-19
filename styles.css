@@ -1,21 +1,102 @@
-/* css to the button  */
+/* Fixed title styling */
+.fixed-title {
+    position: fixed;
+    top: 20px;
+    width: 100%;
+    margin-bottom: 30px;
+    /* background-color: white; */
+    padding: 10px 0;
+    z-index: 1000;
+    /* border-bottom: 2px solid #f0f0f0; */
+    text-align: left; /* Center the title */
+}
 
-    .stButton button {
-        border: none;
-        background-color: transparent;
-        color:white;
-        font-size: 19px;
-        cursor: pointer;
+body {
+    padding-top: 70px; /* Adjust based on the height of your fixed title */
+}
+
+/* Chat container */
+.container {
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
+}
+
+.chat-box {
+    max-width: 70%;
+    margin: 10px;
+    padding: 15px;
+    border-radius: 20px;
+    position: relative;
+    line-height: 1.4;
+}
+
+.query-box {
+    /* background-color: #e6e6e6; */
+    align-self: flex-end;
+    color: white; /* Your custom color */
+    padding: 10px;
+    margin-bottom: 5px;
+    border-radius: 5px;
+}
+
+.response-box {
+    /* background-color: #cfe9ff; */
+    align-self: flex-end;
+    padding: 10px;
+    top :0%;
+    margin-bottom: 5px;
+    border-radius: 5px;
+}
+
+.chat-box::after {
+    content: "";
+    position: absolute;
+    border-width: 10px;
+    border-style: solid;
+}
+
+.query-box::after {
+    /* border-color: #e6e6e6 transparent transparent transparent; */
+    left: 20px;
+    bottom: 100%;
+}
+
+.response-box::after {
+    /* border-color: #cfe9ff transparent transparent transparent; */
+    right: 20px;
+    bottom: 100%;
+}
+
+/* History panel styling */
+.history-panel {
+    flex: 1;
+    padding: 20px;
+    border-left: 2px solid #f0f0f0;
+    height: 100vh; /* Full height */
+    overflow-y: auto; /* Scrollable */
+}
+
+/* Button styling */
+.stButton button {
+    border: none;
+    background-color: transparent;
+    color: white;
+    font-size: 19px;
+    cursor: pointer;
+    width: 100%;
+}
+
+.stButton button:hover {
+    color: darkblue;
+    background-color: white;
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+    .query-box,
+    .response-box {
+        font-size: 14px;
+        padding: 8px;
     }
-    .stButton button:hover {
-        color: darkblue;
-        background-color:white;
-    }
-    /* .response-box {
-        margin-top: 10px;
-        padding: 10px;
-        overflow-wrap:break-word ;
-    } */
-    .sidebar{
-        width: 300px;
-    }
+}
