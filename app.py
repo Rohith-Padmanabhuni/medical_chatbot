@@ -2,10 +2,9 @@ import streamlit as st
 import os
 from groq import Groq
 from dotenv import load_dotenv
-from utils import inject_css, handle_enter_pressed
+from utils import inject_css
 
-
-st.set_page_config(page_title="MedPhi-v1",page_icon="☣")
+st.set_page_config(page_title="MedPhi-v1", page_icon="☣")
 
 load_dotenv()
 groq_api_key = os.getenv("groq_api_key")
@@ -47,45 +46,54 @@ def handle_submit():
         )
         response = chat_completion.choices[0].message.content
         st.session_state.history.append({"query": user_input[:20], "response": response})
-        st.markdown(f'<div class="query-box">Query:<br> {user_input}<hr></div>', unsafe_allow_html=True)
+        st.markdown(f'<div class="query-box"><p>{user_input}</p></div>', unsafe_allow_html=True)
         st.markdown(f'<div class="response-box">Response:<br>{response}</div>', unsafe_allow_html=True)
         st.session_state.user_input = ""
 
-
-
-# JavaScript to handle Enter key press
+# JavaScript to handle Enter key press and add custom id/class
 enter_script = """
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    const input = document.querySelector('.stTextInput input');
-    input.addEventListener('keydown', function(event) {
-        if (event.key === 'Enter') {
-            event.preventDefault(); // Prevents the default action (e.g., form submission)
-            const submitButton = document.querySelector('.stButton button');
-            submitButton.click(); // Simulate click on the submit button
-        }
+    const input = document.querySelectorAll('input[type="text"]');
+    input.forEach(function(element) {
+        element.setAttribute('id', 'user-input-field');
+        element.classList.add('custom-input-class');
+    });
+
+    const textArea = document.querySelectorAll('textarea');
+    textArea.forEach(function(element) {
+        element.addEventListener('keydown', function(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault(); // Prevents the default action (e.g., form submission)
+                const submitButton = document.querySelector('.stButton button');
+                submitButton.click(); // Simulate click on the submit button
+            }
+        });
     });
 });
 </script>
 """
 st.markdown(enter_script, unsafe_allow_html=True)
 
-
 # Function to clear chat history
 def clear_history():
     st.session_state.history = []
 
-# User input with on_change callback
-user_input = st.text_input("Enter your query:", placeholder="Message ",key="user_input", on_change=handle_submit)
 
 
+# Layout for input and button
+col1, col2 = st.columns([3, 1])
+with col1:
+    user_input = st.text_input("Enter your query:", placeholder="Message", key="user_input", on_change=handle_submit)
+    
+
+with col2:
+    st.button("➤", key="send-btn", on_click=handle_submit)
 
 # History Display
 st.sidebar.title("History")
 if st.sidebar.button("Clear History"):
-    st.session_state.history = [] 
+    st.session_state.history = []
 for i, entry in enumerate(st.session_state.history):
-    if st.sidebar.button(f'{i+1}.{entry["query"]}...', key=f'history_{i}'):
+    if st.sidebar.button(f'{i+1}.{entry["query"][:50]}...', key=f'history_{i}'):
         st.markdown(f'<div class="response-box">{entry["response"]}</div>', unsafe_allow_html=True)
-
-

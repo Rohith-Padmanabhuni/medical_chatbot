@@ -1,11 +1,13 @@
 /* Fixed title styling */
 .fixed-title {
+    background: #0E1117;
     position: fixed;
     top: 20px;
     width: 100%;
-    margin-bottom: 30px;
+    margin-top: 1rem;
+    margin-bottom: 40px;
     /* background-color: white; */
-    padding: 10px 0;
+    padding: 10px  0 0 0;
     z-index: 1000;
     /* border-bottom: 2px solid #f0f0f0; */
     text-align: left; /* Center the title */
@@ -33,12 +35,22 @@ body {
 
 .query-box {
     /* background-color: #e6e6e6; */
-    align-self: flex-end;
+    /* display: flex;
+    text-align: left; */
+    margin-top: 4rem;
+    float: right;
+    font-size: 12px;
+    /* align-self: flex-end; */
     color: white; /* Your custom color */
-    padding: 10px;
-    margin-bottom: 5px;
-    border-radius: 5px;
+    /* margin-bottom: 5px; */
+    padding: .5rem 1rem;
+    border-radius: 1rem;
+    background: #3d3d3d;
+    /* height: auto; */
+    /* width: auto; */
+    z-index: -1;
 }
+
 
 .response-box {
     /* background-color: #cfe9ff; */
@@ -47,6 +59,7 @@ body {
     top :0%;
     margin-bottom: 5px;
     border-radius: 5px;
+    overflow: scroll;
 }
 
 .chat-box::after {
@@ -56,11 +69,11 @@ body {
     border-style: solid;
 }
 
-.query-box::after {
-    /* border-color: #e6e6e6 transparent transparent transparent; */
+/* .query-box::after {
+    border-color: #e6e6e6 transparent transparent transparent; 
     left: 20px;
     bottom: 100%;
-}
+} */
 
 .response-box::after {
     /* border-color: #cfe9ff transparent transparent transparent; */
@@ -77,14 +90,18 @@ body {
     overflow-y: auto; /* Scrollable */
 }
 
+
+
 /* Button styling */
 .stButton button {
     border: none;
     background-color: transparent;
+    margin-top: 1.8rem;
     color: white;
     font-size: 19px;
     cursor: pointer;
     width: 100%;
+
 }
 
 .stButton button:hover {
@@ -92,6 +109,14 @@ body {
     background-color: white;
 }
 
+.custom-input-class {
+    border: 2px solid #3498db;
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 5px;
+    background-color: #3498db;
+    width: 1%;
+}
 /* Responsive adjustments */
 @media (max-width: 600px) {
     .query-box,
