@@ -20,10 +20,10 @@ body {
 
 .query-box {
     margin-top: 3rem;
-    float: right;
     font-size: 12px;
+    float: right;
     color: white;
-    padding: .5rem 1rem;
+    padding: .7rem 1rem .1rem;
     border-radius: 1rem;
     background: #3d3d3d;
     z-index: -1;
@@ -31,27 +31,22 @@ body {
 
 .query-box1 {
     margin-top: 3rem;
-    float: right;
     font-size: 12px;
+    float: right;
     color: white;
-    padding: .5rem 1rem;
+    padding: .7rem 1rem .1rem;
     border-radius: 1rem;
     background: #3d3d3d;
     z-index: -1;
 }
 
 .response-box {
-    align-self: flex-end;
-    padding: 10px;
-    margin-bottom: 5px;
-    border-radius: 5px;
+    margin-top: 1rem;
+    font-size: 15px;
+    padding: .5rem 1rem;
+    border-radius: 1rem;
     background: #1e1e1e;
     color: white;
-}
-
-.response-box::after {
-    right: 20px;
-    bottom: 100%;
 }
 
 /* History panel styling */
