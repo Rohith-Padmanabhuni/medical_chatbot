@@ -5,17 +5,19 @@
     top: 20px;
     width: 100%;
     margin-top: 1rem;
-    margin-bottom:30px;
+    margin-bottom: 30px;
     padding: 10px 0 0 0;
     z-index: 1000;
     text-align: left;
 }
+
 body {
     display: flex;
     flex-direction: column;
     height: 100vh;
     margin: 0;
 }
+
 .query-box {
     margin-top: 3rem;
     float: right;
@@ -26,6 +28,7 @@ body {
     background: #3d3d3d;
     z-index: -1;
 }
+
 .query-box1 {
     margin-top: 3rem;
     float: right;
@@ -36,12 +39,14 @@ body {
     background: #3d3d3d;
     z-index: -1;
 }
+
 .response-box {
     align-self: flex-end;
     padding: 10px;
     margin-bottom: 5px;
     border-radius: 5px;
 }
+
 .response-box::after {
     right: 20px;
     bottom: 100%;
@@ -54,6 +59,26 @@ body {
     border-left: 2px solid #f0f0f0;
     height: 100vh;
     overflow-y: auto;
+}
+
+.stSidebar > div:first-child {
+    width: 350px; /* Adjust the width as needed */
+}
+
+.stSidebar button {
+    width: 100%; /* Make the buttons take full width */
+    white-space: normal; /* Allow the text to wrap */
+    text-align: left; /* Align the text to the left */
+    background-color: transparent;
+    border: none;
+    padding: 10px;
+    margin-bottom: 5px;
+    cursor: pointer;
+}
+
+.stSidebar button:hover {
+    background-color: #e0e0e0; /* Light gray background on hover */
+    color: #000000; /* Black text color on hover */
 }
 
 /* Button styling */
@@ -73,5 +98,9 @@ body {
     .response-box {
         font-size: 14px;
         padding: 8px;
+    }
+
+    .stSidebar > div:first-child {
+        width: 100%;
     }
 }

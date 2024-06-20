@@ -48,7 +48,7 @@ def handle_submit(user_input):
             model=model,
         )
         response = chat_completion.choices[0].message.content
-        st.session_state.history.append({"query": user_input[:30], "response": response})
+        st.session_state.history.append({"query": user_input, "response": response})
         st.markdown(f'<div class="query-box"><p>{user_input}</p></div>', unsafe_allow_html=True)
         st.markdown(f'<div class="response-box">Response:<br>{response}</div>', unsafe_allow_html=True)
 
@@ -68,11 +68,11 @@ if st.sidebar.button("Clear History", key="clear"):
     clear_history()
 
 for i, entry in enumerate(st.session_state.history):
-    if st.sidebar.button(f'{i+1} {entry["query"][:50]}...', key=f'history_{i}'):
+    if st.sidebar.button(f'{i+1}. {entry["query"]}', key=f'history_{i}'):
         st.session_state.selected_history = entry
 
 # Display the selected history entry
 if st.session_state.selected_history:
     entry = st.session_state.selected_history
     st.markdown(f'<div class="query-box1"><p>{entry["query"]}</p></div>', unsafe_allow_html=True)
-    st.markdown(f'<div class="response-box">Response:<br>{entry ["response"]}</div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="response-box">Response:<br>{entry["response"]}</div>', unsafe_allow_html=True)
