@@ -5,78 +5,46 @@
     top: 20px;
     width: 100%;
     margin-top: 1rem;
-    margin-bottom: 40px;
-    /* background-color: white; */
-    padding: 10px  0 0 0;
+    margin-bottom:30px;
+    padding: 10px 0 0 0;
     z-index: 1000;
-    /* border-bottom: 2px solid #f0f0f0; */
-    text-align: left; /* Center the title */
+    text-align: left;
 }
-
 body {
-    padding-top: 70px; /* Adjust based on the height of your fixed title */
-}
-
-/* Chat container */
-.container {
     display: flex;
     flex-direction: column;
-    margin-top: 20px;
+    height: 100vh;
+    margin: 0;
+    padding-top: 70px; /* Adjust based on the height of your fixed title */
 }
-
-.chat-box {
-    max-width: 70%;
-    margin: 10px;
-    padding: 15px;
-    border-radius: 20px;
-    position: relative;
-    line-height: 1.4;
-}
-
 .query-box {
-    /* background-color: #e6e6e6; */
-    /* display: flex;
-    text-align: left; */
     margin-top: 4rem;
     float: right;
     font-size: 12px;
-    /* align-self: flex-end; */
-    color: white; /* Your custom color */
-    /* margin-bottom: 5px; */
+    color: white;
     padding: .5rem 1rem;
     border-radius: 1rem;
     background: #3d3d3d;
-    /* height: auto; */
-    /* width: auto; */
     z-index: -1;
 }
-
-
+.query-box1 {
+    margin-top: 0.1rem;
+    float: right;
+    font-size: 12px;
+    color: white;
+    padding: .5rem 1rem;
+    border-radius: 1rem;
+    background: #3d3d3d;
+    z-index: -1;
+}
 .response-box {
-    /* background-color: #cfe9ff; */
     align-self: flex-end;
     padding: 10px;
-    top :0%;
     margin-bottom: 5px;
     border-radius: 5px;
     overflow: scroll;
 }
-
-.chat-box::after {
-    content: "";
-    position: absolute;
-    border-width: 10px;
-    border-style: solid;
-}
-
-/* .query-box::after {
-    border-color: #e6e6e6 transparent transparent transparent; 
-    left: 20px;
-    bottom: 100%;
-} */
-
 .response-box::after {
-    /* border-color: #cfe9ff transparent transparent transparent; */
     right: 20px;
     bottom: 100%;
 }
@@ -90,8 +58,6 @@ body {
     overflow-y: auto; /* Scrollable */
 }
 
-
-
 /* Button styling */
 .stButton button {
     border: none;
@@ -100,8 +66,9 @@ body {
     color: white;
     font-size: 19px;
     cursor: pointer;
+    text-align: left;
+    padding-left: 10px;
     width: 100%;
-
 }
 
 .stButton button:hover {
@@ -109,14 +76,6 @@ body {
     background-color: white;
 }
 
-.custom-input-class {
-    border: 2px solid #3498db;
-    padding: 10px;
-    font-size: 16px;
-    border-radius: 5px;
-    background-color: #3498db;
-    width: 1%;
-}
 /* Responsive adjustments */
 @media (max-width: 600px) {
     .query-box,
