@@ -45,6 +45,8 @@ body {
     padding: 10px;
     margin-bottom: 5px;
     border-radius: 5px;
+    background: #1e1e1e;
+    color: white;
 }
 
 .response-box::after {

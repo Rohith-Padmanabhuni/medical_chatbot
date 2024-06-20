@@ -49,8 +49,6 @@ def handle_submit(user_input):
         )
         response = chat_completion.choices[0].message.content
         st.session_state.history.append({"query": user_input, "response": response})
-        st.markdown(f'<div class="query-box"><p>{user_input}</p></div>', unsafe_allow_html=True)
-        st.markdown(f'<div class="response-box">Response:<br>{response}</div>', unsafe_allow_html=True)
 
 # Function to clear chat history
 def clear_history():
@@ -75,4 +73,9 @@ for i, entry in enumerate(st.session_state.history):
 if st.session_state.selected_history:
     entry = st.session_state.selected_history
     st.markdown(f'<div class="query-box1"><p>{entry["query"]}</p></div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="response-box">Response:<br>{entry["response"]}</div>', unsafe_allow_html=True)
+
+# Display the full chat history
+for entry in st.session_state.history:
+    st.markdown(f'<div class="query-box"><p>{entry["query"]}</p></div>', unsafe_allow_html=True)
     st.markdown(f'<div class="response-box">Response:<br>{entry["response"]}</div>', unsafe_allow_html=True)
