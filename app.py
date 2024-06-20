@@ -62,9 +62,11 @@ def clear_history():
     st.session_state.history = []
 
 # Layout for input and button
-col1, col2 = st.columns([19, 1])
+col1, col2,col3 = st.columns([19,1,4])
 with col1:
     user_input = st.text_input("Enter your query:", placeholder="Message", key="user_input", on_change=handle_submit)
+with col3:
+    pass
 with col2:
     st.button("➤", key="send-btn", on_click=handle_submit)
 
