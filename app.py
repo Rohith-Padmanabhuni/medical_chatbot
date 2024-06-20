@@ -3,7 +3,7 @@ import os
 from groq import Groq
 from dotenv import load_dotenv
 from utils import inject_css
-from streamlit_extras import add_vertical_space as avs 
+
 
 st.set_page_config(page_title="MedPhi-v1", page_icon="☣")
 
