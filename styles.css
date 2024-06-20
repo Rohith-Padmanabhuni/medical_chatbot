@@ -15,7 +15,6 @@ body {
     flex-direction: column;
     height: 100vh;
     margin: 0;
-    padding-top: 70px; /* Adjust based on the height of your fixed title */
 }
 .query-box {
     margin-top: 3rem;
@@ -42,7 +41,6 @@ body {
     padding: 10px;
     margin-bottom: 5px;
     border-radius: 5px;
-    overflow: scroll;
 }
 .response-box::after {
     right: 20px;
@@ -54,21 +52,14 @@ body {
     flex: 1;
     padding: 20px;
     border-left: 2px solid #f0f0f0;
-    height: 100vh; /* Full height */
-    overflow-y: auto; /* Scrollable */
+    height: 100vh;
+    overflow-y: auto;
 }
 
 /* Button styling */
 .stButton button {
     border: none;
     background-color: transparent;
-    margin-top: 1.8rem;
-    color: white;
-    font-size: 19px;
-    cursor: pointer;
-    text-align: left;
-    padding-left: 10px;
-    width: 100%;
 }
 
 .stButton button:hover {

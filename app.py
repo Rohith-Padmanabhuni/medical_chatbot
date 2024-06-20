@@ -33,6 +33,9 @@ st.markdown('<div class="fixed-title"><h1>Medical ChatBot</h1></div>', unsafe_al
 if "history" not in st.session_state:
     st.session_state.history = []
 
+if "selected_history" not in st.session_state:
+    st.session_state.selected_history = None
+
 def handle_submit(user_input):
     if user_input:
         chat_completion = client.chat.completions.create(
@@ -52,6 +55,7 @@ def handle_submit(user_input):
 # Function to clear chat history
 def clear_history():
     st.session_state.history = []
+    st.session_state.selected_history = None
 
 # Use st.chat_input for user input
 user_input = st.chat_input("Say something:")
@@ -64,6 +68,11 @@ if st.sidebar.button("Clear History", key="clear"):
     clear_history()
 
 for i, entry in enumerate(st.session_state.history):
-    if st.sidebar.button(f'{i+1}.{entry["query"][:50]}...', key=f'history_{i}'):
-        st.markdown(f'<div class="query-box1"><p>{entry["query"]}</p></div>', unsafe_allow_html=True)
-        st.markdown(f'<div class="response-box">{entry["response"]}</div>', unsafe_allow_html=True)
+    if st.sidebar.button(f'{i+1} {entry["query"][:50]}...', key=f'history_{i}'):
+        st.session_state.selected_history = entry
+
+# Display the selected history entry
+if st.session_state.selected_history:
+    entry = st.session_state.selected_history
+    st.markdown(f'<div class="query-box1"><p>{entry["query"]}</p></div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="response-box">Response:<br>{entry ["response"]}</div>', unsafe_allow_html=True)
