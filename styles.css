@@ -1,6 +1,6 @@
 /* Fixed title styling */
 .fixed-title {
-    /* background: #0E1117; */
+    background: #0E1117;
     position: fixed;
     /* color: white; */
     top: 20px;
@@ -101,4 +101,7 @@ body {
     .stSidebar > div:first-child {
         width: 100%;
     }
+    
 }
+
+
