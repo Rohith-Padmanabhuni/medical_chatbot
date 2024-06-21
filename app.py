@@ -8,8 +8,7 @@ st.set_page_config(page_title="MedPhi-v1", page_icon="☣")
 load_dotenv()
 groq_api_key = os.getenv("groq_api_key")
 
-st.sidebar.title("Personalization")
-st.sidebar.title("System Prompt:")
+st.sidebar.title("Medical ChatBot")
 
 model = st.sidebar.selectbox(
     'Choose a model', ['Llama3-8b-8192', 'Llama3-70b-8192', 'Mixtral-8x7b-32768', 'Gemma-7b-It']
