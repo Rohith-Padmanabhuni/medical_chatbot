@@ -31,7 +31,7 @@ st.markdown('<div class="fixed-title"><h1>Medical ChatBot</h1></div>', unsafe_al
 
 # Session state for sessions and editing
 if "sessions" not in st.session_state:
-    st.session_state.sessions = [[]]  # Start with one empty session
+    st.session_state.sessions = [{"first_query": None, "history": []}]  # Start with one empty session
 
 if "current_session_index" not in st.session_state:
     st.session_state.current_session_index = 0  # Start with the first session
@@ -41,6 +41,9 @@ if "editing_query_index" not in st.session_state:
 
 def handle_submit(user_input):
     if user_input:
+        current_session = st.session_state.sessions[st.session_state.current_session_index]
+
+        # Generate the response
         chat_completion = client.chat.completions.create(
             messages=[
                 {
@@ -51,19 +54,24 @@ def handle_submit(user_input):
             model=model,
         )
         response = chat_completion.choices[0].message.content
+
         if st.session_state.editing_query_index is not None:
             # Update existing query
-            st.session_state.sessions[st.session_state.current_session_index][st.session_state.editing_query_index]["query"] = user_input
-            st.session_state.sessions[st.session_state.current_session_index][st.session_state.editing_query_index]["response"] = response
+            current_session["history"][st.session_state.editing_query_index]["query"] = user_input
+            current_session["history"][st.session_state.editing_query_index]["response"] = response
             st.session_state.editing_query_index = None  # Reset edit mode
         else:
-            # Add new query
-            st.session_state.sessions[st.session_state.current_session_index].append({"query": user_input, "response": response})
-
+            # Add new query and response
+            current_session["history"].append({"query": user_input, "response": response})
+            
+            # Set the first query and rerun to update the session title
+            if current_session["first_query"] is None:
+                current_session["first_query"] = user_input
+                st.experimental_rerun()
 
 # Function to create a new session
 def create_new_session():
-    st.session_state.sessions.append([])
+    st.session_state.sessions.append({"first_query": None, "history": []})
     st.session_state.current_session_index = len(st.session_state.sessions) - 1
 
 # Function to switch to a session
@@ -76,7 +84,8 @@ if st.sidebar.button("Create New Session"):
     create_new_session()
 
 for i, session in enumerate(st.session_state.sessions):
-    if st.sidebar.button(f'Session {i+1}', key=f'session_{i}'):
+    session_title = session["first_query"] if session["first_query"] else f"Session {i + 1}"
+    if st.sidebar.button(session_title, key=f'session_{i}'):
         switch_session(i)
 
 # Use st.chat_input for user input
@@ -84,14 +93,13 @@ user_input = st.chat_input("Say something:")
 if user_input:
     handle_submit(user_input)
 
-
 # Display the chat history in a div with an id
 st.markdown('<div id="chat-history" style="max-height: 70vh; overflow-y: auto;">', unsafe_allow_html=True)
-current_session = st.session_state.sessions[st.session_state.current_session_index]        
+current_session = st.session_state.sessions[st.session_state.current_session_index]["history"]
 for i, entry in enumerate(current_session):
     st.markdown(f'<div class="query-box" id="query_{i}"><p> {entry["query"]}</p></div>', unsafe_allow_html=True)
     # Add edit button for each query
-    if st.button(f'🖋', key=f'edit_button_{i}'):  
+    if st.button(f'🖋', key=f'edit_button_{i}'):
         st.session_state.editing_query_index = i  # Set edit mode
     st.markdown(f'<div class="response-box">Response:<br>{entry["response"]}</div>', unsafe_allow_html=True)
 
