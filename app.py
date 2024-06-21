@@ -5,6 +5,8 @@ from dotenv import load_dotenv
 
 st.set_page_config(page_title="MedPhi-v1", page_icon="☣")
 
+st.title("Medical ChatBot")
+
 load_dotenv()
 groq_api_key = os.getenv("groq_api_key")
 
@@ -24,9 +26,6 @@ inject_css('styles.css')
 
 # Initialize Groq client
 client = Groq(api_key=groq_api_key)
-
-# Interface
-st.markdown('<div class="fixed-title"><h1>Medical ChatBot</h1></div>', unsafe_allow_html=True)
 
 # Session state for sessions and editing
 if "sessions" not in st.session_state:
@@ -66,7 +65,7 @@ def handle_submit(user_input):
             # Set the first query and rerun to update the session title
             if current_session["first_query"] is None:
                 current_session["first_query"] = user_input
-                st.experimental_rerun()
+                st.rerun()
 
 # Function to create a new session
 def create_new_session():
@@ -97,9 +96,6 @@ st.markdown('<div id="chat-history" style="max-height: 70vh; overflow-y: auto;">
 current_session = st.session_state.sessions[st.session_state.current_session_index]["history"]
 for i, entry in enumerate(current_session):
     st.markdown(f'<div class="query-box" id="query_{i}"><p> {entry["query"]}</p></div>', unsafe_allow_html=True)
-    # Add edit button for each query
-    if st.button(f'🖋', key=f'edit_button_{i}'):
-        st.session_state.editing_query_index = i  # Set edit mode
     st.markdown(f'<div class="response-box">Response:<br>{entry["response"]}</div>', unsafe_allow_html=True)
 
 st.markdown('</div>', unsafe_allow_html=True)
