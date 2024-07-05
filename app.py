@@ -108,7 +108,7 @@ for i, entry in enumerate(current_session):
         continue  # Skip displaying the entry currently being edited
     
     # Display query and response
-    col1, col2 = st.columns([7, 1])
+    col1, col2 = st.columns([5, 1])
     with col1:
         st.markdown(f'<div class="query-box">{entry["query"]}</div>', unsafe_allow_html=True)
     with col2:
