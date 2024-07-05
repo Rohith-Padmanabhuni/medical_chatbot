@@ -37,7 +37,7 @@ if "current_session_index" not in st.session_state:
 if "editing_query_index" not in st.session_state:
     st.session_state.editing_query_index = None  # Initialize editing mode
 
-def handle_submit(user_input):
+def handle_submit(user_input, is_edit=False):
     if user_input:
         current_session = st.session_state.sessions[st.session_state.current_session_index]
 
@@ -53,8 +53,8 @@ def handle_submit(user_input):
         )
         response = chat_completion.choices[0].message.content
 
-        if st.session_state.editing_query_index is not None:
-            # Update existing query
+        if is_edit:
+            # Update existing query and response
             current_session["history"][st.session_state.editing_query_index]["query"] = user_input
             current_session["history"][st.session_state.editing_query_index]["response"] = response
             st.session_state.editing_query_index = None  # Reset edit mode
@@ -86,16 +86,36 @@ for i, session in enumerate(st.session_state.sessions):
     if st.sidebar.button(session_title, key=f'session_{i}'):
         switch_session(i)
 
-# Use st.chat_input for user input
-user_input = st.chat_input("Say something:")
-if user_input:
-    handle_submit(user_input)
+# Handle query input and edit mode
+if st.session_state.editing_query_index is not None:
+    editing_index = st.session_state.editing_query_index
+    edited_query = st.text_input("Edit your query:", value=st.session_state.sessions[st.session_state.current_session_index]["history"][editing_index]["query"], key=f'edit_query_{editing_index}')
+    if st.button("Submit Edit", key=f'submit_edit_{editing_index}'):
+        handle_submit(edited_query, is_edit=True)
+        st.rerun()  # Rerun to update the view and exit edit mode
+else:
+    user_input = st.chat_input("Say something:")
+    if user_input:
+        handle_submit(user_input)
 
-# Display the chat history in a div with an id
-st.markdown('<div id="chat-history" style="max-height: 70vh; overflow-y: auto;">', unsafe_allow_html=True)
+# Display the chat history
 current_session = st.session_state.sessions[st.session_state.current_session_index]["history"]
+
+# Display chat history with edit options
+st.markdown('<div id="chat-history" style="max-height: 70vh; overflow-y: auto;">', unsafe_allow_html=True)
 for i, entry in enumerate(current_session):
-    st.markdown(f'<div class="query-box" id="query_{i}"><p> {entry["query"]}</p></div>', unsafe_allow_html=True)
+    if i == st.session_state.editing_query_index:
+        continue  # Skip displaying the entry currently being edited
+    
+    # Display query and response
+    col1, col2 = st.columns([9, 1])
+    with col1:
+        st.markdown(f'<div class="query-box">{entry["query"]}</div>', unsafe_allow_html=True)
+    with col2:
+        if st.button("🖋", key=f'edit_{i}'):
+            st.session_state.editing_query_index = i
+            st.experimental_rerun()  # Trigger rerun to show the edit input
+
     st.markdown(f'<div class="response-box">Response:<br>{entry["response"]}</div>', unsafe_allow_html=True)
 
 st.markdown('</div>', unsafe_allow_html=True)

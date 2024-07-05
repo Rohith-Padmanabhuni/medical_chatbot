@@ -6,36 +6,26 @@ body {
 }
 
 .query-box {
-    margin-top: 3rem;
+    margin-top: 1rem;
     font-size: 12px;
     float: right;
     border: 2px solid;
-    border-color:#d3d1d1;
+    /* border-color: #d3d1d1; */
     padding: .7rem 1rem .1rem;
     border-radius: 1rem;
-    z-index: -1;
-}
-
-.query-box1 {
-    margin-top: 3rem;
-    font-size: 12px;
-    float: right;
-    color: white;
-    padding: .7rem 1rem .1rem;
-    border-radius: 1rem;
-    border: 2px solid;
-    border-color:#d3d1d1;
-    z-index: -1;
+    position: relative;
+    /* background-color: #f7f7f7; */
 }
 
 .response-box {
     margin-top: 1rem;
+    margin-bottom: 1.5rem;
     font-size: 15px;
     padding: .5rem 1rem;
     border-radius: 1rem;
     border: 2px solid;
-    border-color:#d3d1d1;
-    
+    /* border-color: #d3d1d1; */
+    /* background-color: #ffffff; */
 }
 
 /* History panel styling */
@@ -78,6 +68,18 @@ body {
     background-color: white;
 }
 
+.query-box .edit-button {
+    position: absolute;
+    margin-top: 2rem;
+    /* top: 100px; */
+    right: 10px;
+    font-size: 12px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    color: #007bff;
+}
+
 /* Responsive adjustments */
 @media (max-width: 600px) {
     .query-box,
@@ -89,5 +91,4 @@ body {
     .stSidebar > div:first-child {
         width: 100%;
     }
-    
 }
