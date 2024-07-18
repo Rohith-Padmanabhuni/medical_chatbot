@@ -1,3 +1,4 @@
 streamlit
-groq
+transformers
+torch
 python-dotenv
