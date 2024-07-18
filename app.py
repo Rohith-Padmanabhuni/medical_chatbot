@@ -1,15 +1,32 @@
 import streamlit as st
 import os
 import logging
+import subprocess
+import sys
 from dotenv import load_dotenv
-from transformers import pipeline
 
 # Initialize logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-st.set_page_config(page_title="MedPhi-v1", page_icon="☣")
+def install(package):
+    subprocess.check_call([sys.executable, "-m", "pip", "install", package])
 
+try:
+    from transformers import pipeline
+except ImportError as e:
+    logger.error(f"Error importing transformers: {e}")
+    install("transformers")
+    from transformers import pipeline
+
+# Attempt to import Groq and handle the case where it's not available
+try:
+    from groq import Groq
+except ImportError as e:
+    logger.warning(f"Groq package not found: {e}")
+    Groq = None
+
+st.set_page_config(page_title="MedPhi-v1", page_icon="☣")
 st.title("Medical ChatBot")
 
 load_dotenv()
@@ -38,12 +55,14 @@ st.sidebar.title("Medical ChatBot")
 api_provider = st.sidebar.selectbox('Choose API Provider', ['Groq', 'Hugging Face'])
 
 if api_provider == 'Groq':
-    from groq import Groq
-    groq_api_key = os.getenv("groq_api_key")
-    model = st.sidebar.selectbox(
-        'Choose a model', ['Llama3-8b-8192', 'Llama3-70b-8192', 'Mixtral-8x7b-32768', 'Gemma-7b-It']
-    )
-    client = Groq(api_key=groq_api_key)
+    if Groq:
+        groq_api_key = os.getenv("groq_api_key")
+        model = st.sidebar.selectbox(
+            'Choose a model', ['Llama3-8b-8192', 'Llama3-70b-8192', 'Mixtral-8x7b-32768', 'Gemma-7b-It']
+        )
+        client = Groq(api_key=groq_api_key)
+    else:
+        st.error("Groq package is not installed. Please install the Groq package to use this provider.")
 else:
     huggingface_api_key = st.sidebar.selectbox(
         'Choose an API Key', list(huggingface_api_keys.keys())
@@ -51,12 +70,12 @@ else:
     model = st.sidebar.selectbox(
         'Choose a model', ['facebook/bart-large', 'microsoft/DialoGPT-medium', 'gpt2']
     )
-    
+
     @st.cache_resource
     def load_model(model_name):
         logger.info(f"Loading Hugging Face model: {model_name}")
         return pipeline('text-generation', model=model_name)
-    
+
     generator = load_model(model)
 
 # Session state for sessions and editing
@@ -73,7 +92,7 @@ def handle_submit(user_input, is_edit=False):
     if user_input:
         current_session = st.session_state.sessions[st.session_state.current_session_index]
 
-        if api_provider == 'Groq':
+        if api_provider == 'Groq' and Groq:
             # Generate the response using Groq
             chat_completion = client.chat.completions.create(
                 messages=[
