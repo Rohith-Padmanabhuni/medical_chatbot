@@ -1,20 +1,28 @@
 import streamlit as st
 import os
-from groq import Groq
+import logging
 from dotenv import load_dotenv
+from transformers import pipeline
+
+# Initialize logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 st.set_page_config(page_title="MedPhi-v1", page_icon="☣")
 
 st.title("Medical ChatBot")
 
 load_dotenv()
+
+# Groq API key
 groq_api_key = os.getenv("groq_api_key")
 
-st.sidebar.title("Medical ChatBot")
-
-model = st.sidebar.selectbox(
-    'Choose a model', ['Llama3-8b-8192', 'Llama3-70b-8192', 'Mixtral-8x7b-32768', 'Gemma-7b-It']
-)
+# Hugging Face API keys
+huggingface_api_keys = {
+    "Key 1": os.getenv("huggingface_api_key_1"),
+    "Key 2": os.getenv("huggingface_api_key_2"),
+    "Key 3": os.getenv("huggingface_api_key_3"),
+}
 
 # Function to inject CSS
 def inject_css(css_file):
@@ -24,8 +32,32 @@ def inject_css(css_file):
 # Inject CSS from external file
 inject_css('styles.css')
 
-# Initialize Groq client
-client = Groq(api_key=groq_api_key)
+# Sidebar options for API and model selection
+st.sidebar.title("Medical ChatBot")
+
+api_provider = st.sidebar.selectbox('Choose API Provider', ['Groq', 'Hugging Face'])
+
+if api_provider == 'Groq':
+    from groq import Groq
+    groq_api_key = os.getenv("groq_api_key")
+    model = st.sidebar.selectbox(
+        'Choose a model', ['Llama3-8b-8192', 'Llama3-70b-8192', 'Mixtral-8x7b-32768', 'Gemma-7b-It']
+    )
+    client = Groq(api_key=groq_api_key)
+else:
+    huggingface_api_key = st.sidebar.selectbox(
+        'Choose an API Key', list(huggingface_api_keys.keys())
+    )
+    model = st.sidebar.selectbox(
+        'Choose a model', ['facebook/bart-large', 'microsoft/DialoGPT-medium', 'gpt2']
+    )
+    
+    @st.cache_resource
+    def load_model(model_name):
+        logger.info(f"Loading Hugging Face model: {model_name}")
+        return pipeline('text-generation', model=model_name)
+    
+    generator = load_model(model)
 
 # Session state for sessions and editing
 if "sessions" not in st.session_state:
@@ -41,17 +73,21 @@ def handle_submit(user_input, is_edit=False):
     if user_input:
         current_session = st.session_state.sessions[st.session_state.current_session_index]
 
-        # Generate the response
-        chat_completion = client.chat.completions.create(
-            messages=[
-                {
-                    "role": "user",
-                    "content": user_input,
-                }
-            ],
-            model=model,
-        )
-        response = chat_completion.choices[0].message.content
+        if api_provider == 'Groq':
+            # Generate the response using Groq
+            chat_completion = client.chat.completions.create(
+                messages=[
+                    {
+                        "role": "user",
+                        "content": user_input,
+                    }
+                ],
+                model=model,
+            )
+            response = chat_completion.choices[0].message.content
+        else:
+            # Generate the response using Hugging Face
+            response = generator(user_input, max_length=100, num_return_sequences=1)[0]['generated_text']
 
         if is_edit:
             # Update existing query and response
@@ -109,9 +145,9 @@ for i, entry in enumerate(current_session):
     
     # Display query and response
     col1, col2 = st.columns([9, 1])
-    with col1:
-        st.markdown(f'<div class="query-box">{entry["query"]}</div>', unsafe_allow_html=True)
     with col2:
+        st.markdown(f'<div class="query-box">{entry["query"]}</div>', unsafe_allow_html=True)
+    with col1:
         if st.button("🖋", key=f'edit_{i}'):
             st.session_state.editing_query_index = i
             st.experimental_rerun()  # Trigger rerun to show the edit input
