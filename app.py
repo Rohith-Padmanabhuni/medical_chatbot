@@ -88,6 +88,12 @@ if "current_session_index" not in st.session_state:
 if "editing_query_index" not in st.session_state:
     st.session_state.editing_query_index = None  # Initialize editing mode
 
+# Helper function to truncate long text with ellipsis
+def truncate_query(query, max_len=40):
+    if len(query) > max_len:
+        return query[:max_len] + "..."  # Show only the first 'max_len' characters, followed by ellipsis
+    return query
+
 def handle_submit(user_input, is_edit=False):
     if user_input:
         current_session = st.session_state.sessions[st.session_state.current_session_index]
@@ -138,7 +144,11 @@ if st.sidebar.button("Create New Session"):
 
 for i, session in enumerate(st.session_state.sessions):
     session_title = session["first_query"] if session["first_query"] else f"Session {i + 1}"
-    if st.sidebar.button(session_title, key=f'session_{i}'):
+    
+    # Truncate the session title to fit a single line
+    truncated_session_title = truncate_query(session_title)
+
+    if st.sidebar.button(truncated_session_title, key=f'session_{i}'):
         switch_session(i)
 
 # Handle query input and edit mode
@@ -169,7 +179,7 @@ for i, entry in enumerate(current_session):
     with col1:
         if st.button("🖋", key=f'edit_{i}'):
             st.session_state.editing_query_index = i
-            st.experimental_rerun()  # Trigger rerun to show the edit input
+            st.rerun()  # Trigger rerun to show the edit input
 
     st.markdown(f'<div class="response-box">Response:<br>{entry["response"]}</div>', unsafe_allow_html=True)
 
